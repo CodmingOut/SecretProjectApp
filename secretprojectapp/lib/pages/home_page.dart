@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _VirusItemUnit extends StatelessWidget {
-  String _data;
+  final String _data;
 
   _VirusItemUnit({
     Key key,
@@ -116,30 +116,33 @@ class _VirusItemUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        height: 100,
-        margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 5,
-              color: Colors.black12
-            )
-          ]
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            height: 150,
-            padding: EdgeInsets.all(15),
-            child: Text(_data)
+    return Container(
+      height: 100,
+      margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 5,
+            color: Colors.black12
+          )
+        ]
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            child: Container(
+              height: 150,
+              padding: EdgeInsets.all(15),
+              child: Text(_data)
+            ),
+            onTap: () {},
           )
         )
-      ),
-      onTap: () {},
+      )
     );
   }
 }

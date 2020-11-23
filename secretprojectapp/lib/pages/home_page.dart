@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secretprojectapp/dummy/stream_dummy.dart';
+import 'package:secretprojectapp/virus_unit.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
@@ -15,12 +16,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _listenStream(getStreamDummy(5));
+    _listenStream(getStreamDummy());
   }
 
   void _listenStream(Stream<String> stream) {
     stream.listen((data) {
-      _listItems.insert(0, _VirusItemUnit(data: data));
+      VirusUnit virusData = VirusUnit.fromJsonString(data);
+      _listItems.insert(0, _VirusItemUnit(data: virusData));
       if(_listKey.currentState == null) return;
       _listKey.currentState.insertItem(0);
     });
@@ -104,11 +106,11 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _VirusItemUnit extends StatelessWidget {
-  final String _data;
+  final VirusUnit _data;
 
   _VirusItemUnit({
     Key key,
-    @required String data
+    @required VirusUnit data
   })
   : assert(data != null),
     this._data = data,
@@ -137,7 +139,29 @@ class _VirusItemUnit extends StatelessWidget {
             child: Container(
               height: 150,
               padding: EdgeInsets.all(15),
-              child: Text(_data)
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('보낸 사람'),
+                      Text('파일명'),
+                      Text('일시'),
+                    ],
+                  ),
+                  SizedBox(width: 20),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(_data.sender),
+                      Text(_data.fileName),
+                      Text(_data.timestamp),
+                    ],
+                  )
+                ]
+              )
             ),
             onTap: () {},
           )

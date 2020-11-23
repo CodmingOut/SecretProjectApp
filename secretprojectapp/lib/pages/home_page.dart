@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
 
   void _listenStream(Stream<String> stream) {
     stream.listen((data) {
-      _listItems.insert(0, _buildItem(data));
+      _listItems.insert(0, _VirusItemUnit(data: data));
       if(_listKey.currentState == null) return;
       _listKey.currentState.insertItem(0);
     });
@@ -34,8 +34,44 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Container(
-                color: Colors.black,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 5,
+                      color: Colors.black12
+                    )
+                  ]
+                ),
                 height: 150,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: InkWell(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.close, color: Colors.red, size: 50),
+                              Text('10',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                  fontSize: 20
+                                )
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                      onTap: () {},
+                    )
+                  ),
+                )
               ),
               Expanded(
                 child: Container(
@@ -64,7 +100,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildItem(String data) {
+  
+}
+
+class _VirusItemUnit extends StatelessWidget {
+  String _data;
+
+  _VirusItemUnit({
+    Key key,
+    @required String data
+  })
+  : assert(data != null),
+    this._data = data,
+    super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
         height: 100,
@@ -84,7 +135,7 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             height: 150,
             padding: EdgeInsets.all(15),
-            child: Text(data)
+            child: Text(_data)
           )
         )
       ),

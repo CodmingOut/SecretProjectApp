@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:secretprojectapp/dummy/stream_dummy.dart';
 import 'package:secretprojectapp/virus_unit.dart';
 import 'package:web_socket_channel/io.dart';
 

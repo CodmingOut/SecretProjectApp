@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secretprojectapp/dummy/stream_dummy.dart';
 import 'package:secretprojectapp/virus_unit.dart';
+import 'package:web_socket_channel/io.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home_page';
@@ -10,17 +11,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const String IP = '192.168.0.3';
+
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   List<Widget> _listItems = [];
+
+  IOWebSocketChannel channel;
 
   @override
   void initState() {
     super.initState();
-    _listenStream(getStreamDummy());
+
+    channel = IOWebSocketChannel.connect('ws://$IP:3100');
+    Stream<dynamic> stream = channel.stream;
+    _listenStream(stream);
   }
 
-  void _listenStream(Stream<String> stream) {
-    stream.listen((data) {
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
+  }
+
+  void _listenStream(Stream<dynamic> stream) {
+    stream.listen((rawData) {
+      String data = rawData.toString();
       VirusUnit virusData = VirusUnit.fromJsonString(data);
       _listItems.insert(0, _VirusItemUnit(data: virusData));
       if(_listKey.currentState == null) return;

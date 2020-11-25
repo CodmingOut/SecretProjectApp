@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const String IP = '192.168.0.3';
+  static const String IP = '59.22.70.154';
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   List<Widget> _listItems = [];

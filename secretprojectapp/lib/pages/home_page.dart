@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:secretprojectapp/pages/mail_page.dart';
 import 'package:secretprojectapp/virus_unit.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -170,13 +171,15 @@ class _VirusItemUnit extends StatelessWidget {
                     children: [
                       Text(_data.sender),
                       Text(_data.fileName),
-                      Text(_data.timestamp),
+                      Text(_data.time.toString()),
                     ],
                   )
                 ]
               )
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, MailPage.routeName, arguments: MailPageArguments(_data));
+            },
           )
         )
       )

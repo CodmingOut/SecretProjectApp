@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secretprojectapp/pages/home_page.dart';
+import 'package:secretprojectapp/pages/mail_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Secret Project App',
       routes: {
-        '/' : (context) => HomePage()
+        '/' : (context) => HomePage(),
+        HomePage.routeName : (context) => HomePage(),
+        MailPage.routeName : (context) => MailPage()
       },
     );
   }

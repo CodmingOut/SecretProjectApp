@@ -20,10 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     channel = IOWebSocketChannel.connect('ws://$IP:3100');
-    Stream<dynamic> stream = channel.stream;
-    _listenStream(stream);
   }
 
   @override
@@ -32,85 +29,87 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _listenStream(Stream<dynamic> stream) {
-    stream.listen((rawData) {
-      String data = rawData.toString();
-      VirusUnit virusData = VirusUnit.fromJsonString(data);
-      _listItems.insert(0, _VirusItemUnit(data: virusData));
-      if(_listKey.currentState == null) return;
-      _listKey.currentState.insertItem(0);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 5,
-                      color: Colors.black12
-                    )
-                  ]
-                ),
-                height: 150,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: InkWell(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+        child: StreamBuilder(
+          stream: channel.stream,
+          builder: (context, snapshot) {
+            if(!snapshot.hasData) return Container(child: Center(child: CircularProgressIndicator()));
+
+            String data = snapshot.data.toString();
+            VirusUnit virusData = VirusUnit.fromJsonString(data);
+            _listItems.insert(0, _VirusItemUnit(data: virusData));
+            _listKey.currentState?.insertItem(0);
+
+            return Container(
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          color: Colors.black12
+                        )
+                      ]
+                    ),
+                    height: 150,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Icon(Icons.close, color: Colors.red, size: 50),
-                              Text('10',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                  fontSize: 20
-                                )
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.close, color: Colors.red, size: 50),
+                                  Text((_listItems.length - 1).toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                      fontSize: 20
+                                    )
+                                  )
+                                ],
                               )
                             ],
-                          )
-                        ],
+                          ),
+                          onTap: () {},
+                        )
                       ),
-                      onTap: () {},
                     )
                   ),
-                )
-              ),
-              Expanded(
-                child: Container(
-                  child: AnimatedList(
-                    padding: EdgeInsets.only(top: 20),
-                    key: _listKey,
-                    itemBuilder: (context, index, animation) {
-                      return SlideTransition(
-                        position: CurvedAnimation(
-                          curve: Curves.easeOut,
-                          parent: animation
-                        ).drive(Tween<Offset>(
-                          begin: Offset(1, 0),
-                          end: Offset(0, 0)
-                        )),
-                        child: _listItems[index],
-                      );
-                    }
+                  Expanded(
+                    child: Container(
+                      child: AnimatedList(
+                        padding: EdgeInsets.only(top: 20),
+                        key: _listKey,
+                        itemBuilder: (context, index, animation) {
+                          return SlideTransition(
+                            position: CurvedAnimation(
+                              curve: Curves.easeOut,
+                              parent: animation
+                            ).drive(Tween<Offset>(
+                              begin: Offset(1, 0),
+                              end: Offset(0, 0)
+                            )),
+                            child: _listItems[index],
+                          );
+                        }
+                      )
+                    )
                   )
-                )
-              )
-            ],
-          ),
+                ],
+              ),
+            );
+          }
         )
       ),
     );
